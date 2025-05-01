@@ -13,7 +13,6 @@ type Guest = {
   id: string;
   firstName: string;
   lastName: string;
-  deadline?: string;
   attending: boolean;
 };
 
@@ -68,7 +67,7 @@ app.get(
 type GuestRequestBodyPost = {
   firstName: string;
   lastName: string;
-  deadline?: string;
+  attending: boolean;
 };
 
 type GuestResponseBodyPost =
@@ -115,7 +114,6 @@ app.post(
       id: String(id++),
       firstName: request.body.firstName,
       lastName: request.body.lastName,
-      ...(request.body.deadline ? { deadline: request.body.deadline } : {}),
       attending: false,
     };
 
@@ -155,7 +153,6 @@ app.get(
 type GuestRequestBodyPut = {
   firstName: string;
   lastName: string;
-  deadline?: string;
   attending: boolean;
 };
 
@@ -172,7 +169,7 @@ app.put(
     request: Request<{ id: string }, GuestResponseBodyPut, GuestRequestBodyPut>,
     response: Response<GuestResponseBodyPut>,
   ) {
-    const allowedKeys = ['firstName', 'lastName', 'deadline', 'attending'];
+    const allowedKeys = ['firstName', 'lastName', 'attending'];
     const difference = Object.keys(request.body).filter(
       (key) => !allowedKeys.includes(key),
     );
@@ -205,7 +202,6 @@ app.put(
 
     if (request.body.firstName) guest.firstName = request.body.firstName;
     if (request.body.lastName) guest.lastName = request.body.lastName;
-    if (request.body.deadline) guest.deadline = request.body.deadline;
     if ('attending' in request.body) guest.attending = request.body.attending;
     response.json(guest);
   },
